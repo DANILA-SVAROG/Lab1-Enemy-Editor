@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+tmp/
+ЛР0/
+ЛР1/
+*.user
+*.suo
