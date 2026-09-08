@@ -18,15 +18,15 @@ public partial class MainWindow : Window
         LoadDefaultIcons();
     }
 
-    // Загружает иконки из папки проекта.
+    // Загружает иконки монстров из папки проекта.
     private void LoadDefaultIcons()
     {
-        string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "icons");
+        string path = Path.Combine(AppContext.BaseDirectory, "Assets", "Icons", "icons", "Monsters");
         if (Directory.Exists(path))
         {
             LoadIconsFromFolder(path);
             ShowIconsInList();
-            IconsPathTextBlock.Text = "Иконки проекта";
+            IconsPathTextBlock.Text = "Иконки монстров";
         }
     }
 
