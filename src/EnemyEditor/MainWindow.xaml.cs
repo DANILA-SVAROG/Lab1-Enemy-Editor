@@ -56,7 +56,8 @@ public partial class MainWindow : Window
             {
                 Source = new BitmapImage(new Uri(icon.ImagePath)),
                 Height = 64,
-                Width = 86,
+                Width = 64,
+                Stretch = System.Windows.Media.Stretch.Uniform,
                 Margin = new Thickness(5),
                 ToolTip = icon.Name,
                 Tag = icon

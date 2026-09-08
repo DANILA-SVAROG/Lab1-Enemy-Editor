@@ -69,10 +69,21 @@
                         <Button Content="Загрузить папку с иконками" Click="LoadIconsButton_Click"/>
                         <TextBlock Name="IconsPathTextBlock" Text="Иконки ещё не загружены" TextTrimming="CharacterEllipsis" Margin="6" Foreground="#687386"/>
                     </StackPanel>
-                    <ListBox Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged">
+                    <ListBox Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged"
+                             HorizontalContentAlignment="Stretch"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                <Setter Property="Padding" Value="6"/>
+                                <Setter Property="Margin" Value="3"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
                         <ListBox.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <WrapPanel/>
+                                <UniformGrid Columns="4"/>
                             </ItemsPanelTemplate>
                         </ListBox.ItemsPanel>
                     </ListBox>
