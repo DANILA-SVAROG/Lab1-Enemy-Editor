@@ -1,0 +1,87 @@
+<Window x:Class="EnemyEditor.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Редактор противников" Height="720" Width="1180"
+        MinHeight="620" MinWidth="980" Background="#F3F5F9">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="12,7"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Padding" Value="7,5"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="Margin" Value="4,6,4,0"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </Window.Resources>
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0" Text="Редактор противников" FontSize="26" FontWeight="SemiBold" Margin="4,0,4,16"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250"/>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Grid.Column="0" Header="Список противников" Margin="4">
+                <DockPanel Margin="8">
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <Button Content="Добавить" Click="AddButton_Click"/>
+                        <Button Content="Удалить" Click="RemoveButton_Click"/>
+                    </StackPanel>
+                    <ListBox Name="EnemiesListBox" SelectionChanged="EnemiesListBox_SelectionChanged"/>
+                </DockPanel>
+            </GroupBox>
+            <GroupBox Grid.Column="1" Header="Данные противника" Margin="4">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <Label Content="Имя противника"/>
+                        <TextBox Name="EnemyNameTextBox"/>
+                        <Label Content="Имя иконки"/>
+                        <TextBox Name="IconNameTextBox" IsReadOnly="True"/>
+                        <Label Content="Базовое здоровье"/>
+                        <TextBox Name="BaseLifeTextBox"/>
+                        <Label Content="Модификатор здоровья"/>
+                        <TextBox Name="LifeModifierTextBox"/>
+                        <Label Content="Базовое золото"/>
+                        <TextBox Name="BaseGoldTextBox"/>
+                        <Label Content="Модификатор золота"/>
+                        <TextBox Name="GoldModifierTextBox"/>
+                        <Label Content="Шанс появления"/>
+                        <TextBox Name="SpawnChanceTextBox"/>
+                        <Button Content="Сохранить изменения" Click="UpdateButton_Click" Margin="4,16,4,4"/>
+                        <Image Name="MainEnemyIcon" Height="150" Width="150" Stretch="Uniform" Margin="4,12"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </GroupBox>
+            <GroupBox Grid.Column="2" Header="Иконки противников" Margin="4">
+                <DockPanel Margin="8">
+                    <StackPanel DockPanel.Dock="Bottom">
+                        <Button Content="Загрузить папку с иконками" Click="LoadIconsButton_Click"/>
+                        <TextBlock Name="IconsPathTextBlock" Text="Иконки ещё не загружены" TextTrimming="CharacterEllipsis" Margin="6" Foreground="#687386"/>
+                    </StackPanel>
+                    <ListBox Name="IconsListBox" SelectionChanged="IconsListBox_SelectionChanged">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                    </ListBox>
+                </DockPanel>
+            </GroupBox>
+        </Grid>
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Сохранить JSON" Click="SaveButton_Click"/>
+            <Button Content="Загрузить JSON" Click="LoadButton_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>
