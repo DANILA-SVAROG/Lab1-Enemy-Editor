@@ -59,8 +59,7 @@ public partial class MainWindow : Window
                 Width = 64,
                 Stretch = System.Windows.Media.Stretch.Uniform,
                 Margin = new Thickness(5),
-                ToolTip = icon.Name,
-                Tag = icon
+                ToolTip = icon.Name
             };
             IconsListBox.Items.Add(image);
         }
@@ -82,9 +81,10 @@ public partial class MainWindow : Window
     private void IconsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
         ListBox iconHolder = (ListBox)sender;
-        if (iconHolder.SelectedItem is Image selectedImage && selectedImage.Tag is EnemyIcon selectedIcon)
+        if (iconHolder.SelectedItem is Image selectedImage && iconHolder.SelectedItem != null)
         {
-            IconNameTextBox.Text = selectedIcon.Name;
+            string iconName = Path.GetFileName(selectedImage.Source.ToString());
+            IconNameTextBox.Text = iconName;
             MainEnemyIcon.Source = selectedImage.Source;
         }
     }
