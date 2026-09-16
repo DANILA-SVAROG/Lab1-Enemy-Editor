@@ -36,7 +36,7 @@ public partial class MainWindow : Window
         string filter = "*.png";
         string[] files = Directory.GetFiles(path, filter);
         enemyIcons.Clear();
-        foreach (string file in files.OrderBy(file => file))
+        foreach (string file in files)
         {
             enemyIcons.Add(new EnemyIcon
             {
