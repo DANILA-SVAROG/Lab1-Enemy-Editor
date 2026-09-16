@@ -227,6 +227,7 @@ public partial class MainWindow : Window
     {
         var dialog = new SaveFileDialog
         {
+            // Настраиваем диалог как в примере из методички.
             FileName = "enemies.json",
             DefaultExt = ".json",
             Filter = "JSON files (*.json)|*.json"
@@ -243,6 +244,7 @@ public partial class MainWindow : Window
     {
         var dialog = new OpenFileDialog
         {
+            // Разрешаем выбирать только файлы JSON.
             DefaultExt = ".json",
             Filter = "JSON files (*.json)|*.json"
         };
