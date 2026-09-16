@@ -34,7 +34,7 @@ public partial class MainWindow : Window
     public void LoadIconsFromFolder(string path)
     {
         string filter = "*.png";
-        string[] files = Directory.GetFiles(path, filter, SearchOption.AllDirectories);
+        string[] files = Directory.GetFiles(path, filter);
         enemyIcons.Clear();
         foreach (string file in files.OrderBy(file => file))
         {
