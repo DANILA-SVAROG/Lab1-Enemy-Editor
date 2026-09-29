@@ -68,6 +68,6 @@ public class Player
 
     private BigNumber CalculateNextUpgradeCost()
     {
-        return UpgradeCost * (UpgradeModifier * Lvl);
+        return UpgradeCost * (UpgradeModifier * (Lvl - 1));
     }
 }
