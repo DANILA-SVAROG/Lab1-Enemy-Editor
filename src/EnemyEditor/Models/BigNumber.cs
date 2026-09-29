@@ -82,6 +82,101 @@ public sealed class BigNumber : IComparable<BigNumber>, IEquatable<BigNumber>
     public static BigNumber operator +(BigNumber a, BigNumber b) => a.Add(b);
     public static BigNumber operator -(BigNumber a, BigNumber b) => a.Subtract(b);
 
+    // Умножает каждый блок и переносит остаток в следующий.
+    private BigNumber Multiply(double multiplier)
+    {
+        (long numerator, long denominator) = GetFraction(multiplier);
+        int[] result = new int[ArrayLength + 8];
+        long carry = 0;
+        for (int i = 0; i < ArrayLength; i++)
+        {
+            long product = number[i] * numerator + carry;
+            result[i] = (int)(product % Base);
+            carry = product / Base;
+        }
+
+        int position = ArrayLength;
+        while (carry > 0)
+        {
+            result[position++] = (int)(carry % Base);
+            carry /= Base;
+        }
+
+        BigNumber productNumber = new BigNumber(result);
+        return denominator == 1 ? productNumber : productNumber.DivideByInteger(denominator);
+    }
+
+    // Делит число слева направо, передавая остаток дальше.
+    private BigNumber Divide(double divisor)
+    {
+        (long numerator, long denominator) = GetFraction(divisor);
+        return Multiply(denominator).DivideByInteger(numerator);
+    }
+
+    private BigNumber DivideByInteger(long divisor)
+    {
+        int[] result = new int[ArrayLength];
+        long remainder = 0;
+        for (int i = ArrayLength - 1; i >= 0; i--)
+        {
+            long current = remainder * Base + number[i];
+            result[i] = (int)(current / divisor);
+            remainder = current % divisor;
+        }
+
+        return new BigNumber(result);
+    }
+
+    // Представляет десятичный множитель обычной дробью.
+    private static (long numerator, long denominator) GetFraction(double value)
+    {
+        if (double.IsNaN(value) || double.IsInfinity(value) || value <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Множитель должен быть положительным.");
+        }
+
+        decimal decimalValue;
+        try
+        {
+            decimalValue = (decimal)value;
+        }
+        catch (OverflowException)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Множитель слишком велик.");
+        }
+
+        long denominator = 1;
+        while (decimalValue != decimal.Truncate(decimalValue) && denominator < 1_000_000_000)
+        {
+            decimalValue *= 10;
+            denominator *= 10;
+        }
+
+        if (decimalValue != decimal.Truncate(decimalValue) || decimalValue > long.MaxValue)
+        {
+            throw new ArgumentOutOfRangeException(nameof(value), "Множитель содержит слишком много цифр.");
+        }
+
+        long numerator = (long)decimalValue;
+        long common = GreatestCommonDivisor(numerator, denominator);
+        return (numerator / common, denominator / common);
+    }
+
+    private static long GreatestCommonDivisor(long a, long b)
+    {
+        while (b != 0)
+        {
+            long remainder = a % b;
+            a = b;
+            b = remainder;
+        }
+
+        return a;
+    }
+
+    public static BigNumber operator *(BigNumber a, double b) => a.Multiply(b);
+    public static BigNumber operator /(BigNumber a, double b) => a.Divide(b);
+
     // Убирает нулевые старшие блоки.
     private static int[] TrimLeadingZeros(int[] blocks)
     {
