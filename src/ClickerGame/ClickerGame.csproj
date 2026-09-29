@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\EnemyEditor\Models\BigNumber.cs" Link="Models\BigNumber.cs" />
+    <Compile Include="..\EnemyEditor\Models\CEnemyTemplate.cs" Link="Models\CEnemyTemplate.cs" />
+    <Compile Include="..\EnemyEditor\Models\CEnemyTemplateList.cs" Link="Models\CEnemyTemplateList.cs" />
+    <Compile Include="..\EnemyEditor\Models\EnemyIcon.cs" Link="Models\EnemyIcon.cs" />
+    <Compile Include="..\EnemyEditor\Models\Enemy.cs" Link="Models\Enemy.cs" />
+    <Compile Include="..\EnemyEditor\Models\Player.cs" Link="Models\Player.cs" />
+    <Compile Include="..\EnemyEditor\Models\EnemyTemplateStore.cs" Link="Models\EnemyTemplateStore.cs" />
+    <Compile Include="..\EnemyEditor\Models\EnemyFileLocation.cs" Link="Models\EnemyFileLocation.cs" />
+    <Content Include="..\EnemyEditor\Assets\Icons\icons\Monsters\*.png" Link="Assets\Icons\Monsters\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="10.0.12" />
+  </ItemGroup>
+
+</Project>
