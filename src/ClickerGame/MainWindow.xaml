@@ -1,0 +1,62 @@
+<Window x:Class="ClickerGame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Игра-кликер" Height="510" Width="750" MinHeight="460" MinWidth="680"
+        Background="#F3F5F9">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="Игра-кликер" FontSize="25" FontWeight="SemiBold" Margin="0,0,0,18"/>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
+            <Button Name="LoadButton" Content="Загрузить противников" Click="LoadButton_Click" Padding="12,7"/>
+            <TextBlock Name="FilePathTextBlock" Text="Файл с шаблонами не загружен" Foreground="#687386"
+                       VerticalAlignment="Center" TextTrimming="CharacterEllipsis" Width="460" Margin="12,0,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <GroupBox Grid.Column="0" Header="Противник" Margin="0,0,10,0">
+                <StackPanel Margin="12">
+                    <TextBlock Name="EnemyNameTextBlock" Text="Имя: —" FontSize="17" Margin="0,6"/>
+                    <TextBlock Name="EnemyHealthTextBlock" Text="Здоровье: —" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="EnemyRewardTextBlock" Text="Награда: —" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="DefeatedTextBlock" Text="Побеждено: 0" FontSize="15" Margin="0,6"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Header="Нажмите на противника" Margin="0,0,10,0">
+                <Grid>
+                    <Button Name="EnemyButton" Click="EnemyButton_Click" IsEnabled="False" Margin="12"
+                            Background="White" BorderBrush="#B8C2CF" Cursor="Hand">
+                        <Image Name="EnemyImage" Width="150" Height="150" Stretch="Uniform"/>
+                    </Button>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Grid.Column="2" Header="Игрок">
+                <StackPanel Margin="12">
+                    <TextBlock Name="LevelTextBlock" Text="Уровень: 1" FontSize="17" Margin="0,6"/>
+                    <TextBlock Name="GoldTextBlock" Text="Золото: 0" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="DamageTextBlock" Text="Урон: 5" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="CostTextBlock" Text="Цена улучшения: 10" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
+                    <Button Name="UpgradeButton" Content="Улучшить урон" Click="UpgradeButton_Click"
+                            IsEnabled="False" Padding="10,7" Margin="0,14,0,0"/>
+                </StackPanel>
+            </GroupBox>
+        </Grid>
+
+        <TextBlock Grid.Row="3" Name="StatusTextBlock" Text="Загрузите JSON из редактора противников."
+                   Foreground="#52647A" Margin="0,14,0,0" TextWrapping="Wrap"/>
+    </Grid>
+</Window>
