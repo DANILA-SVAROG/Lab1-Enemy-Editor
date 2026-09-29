@@ -11,11 +11,38 @@ public partial class MainWindow : Window
 {
     private readonly CEnemyTemplateList enemyTemplates = new();
     private readonly List<EnemyIcon> enemyIcons = new();
+    private string currentJsonPath = EnemyFileLocation.FilePath;
 
     public MainWindow()
     {
         InitializeComponent();
         LoadDefaultIcons();
+        LoadSavedTemplates();
+    }
+
+    // Загружает общий файл шаблонов при запуске редактора.
+    private void LoadSavedTemplates()
+    {
+        if (!File.Exists(currentJsonPath))
+        {
+            return;
+        }
+
+        try
+        {
+            enemyTemplates.LoadFromJson(currentJsonPath);
+            RefreshEnemyList(0);
+        }
+        catch (Exception exception)
+        {
+            ShowError($"Не удалось загрузить сохранённые шаблоны: {exception.Message}");
+        }
+    }
+
+    // Обновляет общий файл после изменения списка.
+    private void SaveSharedTemplates()
+    {
+        enemyTemplates.SaveToJson(EnemyFileLocation.FilePath);
     }
 
     // Загружает иконки монстров из папки проекта.
@@ -136,6 +163,7 @@ public partial class MainWindow : Window
         }
         enemyTemplates.AddEnemy(enemy.Name, enemy.IconName, enemy.BaseLife, enemy.LifeModifier, enemy.BaseGold, enemy.GoldModifier, enemy.SpawnChance);
         RefreshEnemyList(enemyTemplates.Enemies.Count - 1);
+        SaveSharedTemplates();
     }
 
     // Сохраняет изменения выбранного шаблона.
@@ -154,6 +182,7 @@ public partial class MainWindow : Window
         int index = EnemiesListBox.SelectedIndex;
         enemyTemplates.UpdateEnemy(index, enemy);
         RefreshEnemyList(index);
+        SaveSharedTemplates();
     }
 
     // Удаляет выбранный шаблон.
@@ -167,6 +196,7 @@ public partial class MainWindow : Window
         int index = EnemiesListBox.SelectedIndex;
         enemyTemplates.DeleteEnemyByIndex(index);
         RefreshEnemyList(Math.Min(index, enemyTemplates.Enemies.Count - 1));
+        SaveSharedTemplates();
     }
 
     // Обновляет список имён.
@@ -235,6 +265,8 @@ public partial class MainWindow : Window
         if (dialog.ShowDialog() == true)
         {
             enemyTemplates.SaveToJson(dialog.FileName);
+            currentJsonPath = dialog.FileName;
+            SaveSharedTemplates();
             MessageBox.Show("Список сохранён.", "Готово", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
@@ -253,7 +285,9 @@ public partial class MainWindow : Window
             try
             {
                 enemyTemplates.LoadFromJson(dialog.FileName);
+                currentJsonPath = dialog.FileName;
                 RefreshEnemyList(0);
+                SaveSharedTemplates();
                 MessageBox.Show("Список загружен.", "Готово", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception exception)
