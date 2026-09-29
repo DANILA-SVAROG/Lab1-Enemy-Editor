@@ -39,6 +39,49 @@ public sealed class BigNumber : IComparable<BigNumber>, IEquatable<BigNumber>
         number = TrimLeadingZeros(blocks);
     }
 
+    // Складывает блоки с переносом в следующий разряд.
+    private BigNumber Add(BigNumber bnum)
+    {
+        int[] result = new int[Math.Max(ArrayLength, bnum.ArrayLength) + 1];
+        int carry = 0;
+        for (int i = 0; i < result.Length - 1; i++)
+        {
+            int sum = carry;
+            if (i < ArrayLength) sum += number[i];
+            if (i < bnum.ArrayLength) sum += bnum.number[i];
+            result[i] = sum % Base;
+            carry = sum / Base;
+        }
+
+        result[^1] = carry;
+        return new BigNumber(result);
+    }
+
+    // Вычитает блоки с займом из следующего разряда.
+    private BigNumber Subtract(BigNumber bnum)
+    {
+        if (CompareTo(bnum) < 0)
+        {
+            throw new InvalidOperationException("Результат вычитания не может быть отрицательным.");
+        }
+
+        int[] result = new int[ArrayLength];
+        int borrow = 0;
+        for (int i = 0; i < ArrayLength; i++)
+        {
+            int difference = number[i] - borrow;
+            if (i < bnum.ArrayLength) difference -= bnum.number[i];
+            borrow = difference < 0 ? 1 : 0;
+            if (borrow == 1) difference += Base;
+            result[i] = difference;
+        }
+
+        return new BigNumber(result);
+    }
+
+    public static BigNumber operator +(BigNumber a, BigNumber b) => a.Add(b);
+    public static BigNumber operator -(BigNumber a, BigNumber b) => a.Subtract(b);
+
     // Убирает нулевые старшие блоки.
     private static int[] TrimLeadingZeros(int[] blocks)
     {
