@@ -90,9 +90,9 @@ public sealed class BigNumber : IComparable<BigNumber>, IEquatable<BigNumber>
         long carry = 0;
         for (int i = 0; i < ArrayLength; i++)
         {
-            long product = number[i] * numerator + carry;
+            decimal product = (decimal)number[i] * numerator + carry;
             result[i] = (int)(product % Base);
-            carry = product / Base;
+            carry = (long)decimal.Truncate(product / Base);
         }
 
         int position = ArrayLength;
@@ -119,9 +119,9 @@ public sealed class BigNumber : IComparable<BigNumber>, IEquatable<BigNumber>
         long remainder = 0;
         for (int i = ArrayLength - 1; i >= 0; i--)
         {
-            long current = remainder * Base + number[i];
-            result[i] = (int)(current / divisor);
-            remainder = current % divisor;
+            decimal current = (decimal)remainder * Base + number[i];
+            result[i] = (int)decimal.Truncate(current / divisor);
+            remainder = (long)(current % divisor);
         }
 
         return new BigNumber(result);
