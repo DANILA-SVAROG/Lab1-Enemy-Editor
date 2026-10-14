@@ -4,7 +4,7 @@ namespace ClickerMechanics;
 
 public class CController
 {
-    private readonly List<CObject> objects;
+    private readonly List<CCollectable> objects;
     private double spawnRate;
     private double time;
     private readonly Random rng;
@@ -17,11 +17,13 @@ public class CController
     private double timeLeft;
     private readonly bool timedRound;
     private bool running;
+    private readonly CPlayer player;
 
     public CController(double spawnRate, ulong startTime, Size sceneSize)
     {
         rng = new Random();
-        objects = new List<CObject>();
+        objects = new List<CCollectable>();
+        player = new CPlayer(0.45);
         this.spawnRate = spawnRate;
         this.sceneSize = sceneSize;
         timeLeft = startTime;
@@ -32,7 +34,8 @@ public class CController
         maxSpriteSize = 60;
     }
 
-    public IReadOnlyList<CObject> getObjects() => objects.AsReadOnly();
+    public IReadOnlyList<CCollectable> getObjects() => objects.AsReadOnly();
+    public CPlayer getPlayer() => player;
     public double getPoints() => points;
     public double getTimeLeft() => timeLeft;
     public double getSpawnRate() => spawnRate;
@@ -52,7 +55,7 @@ public class CController
     public void setSceneSize(Size value)
     {
         sceneSize = value;
-        foreach (CObject obj in objects)
+        foreach (CCollectable obj in objects)
         {
             obj.fitToScene(sceneSize);
         }
@@ -68,10 +71,10 @@ public class CController
 
         double lifetime = minLifetime + rng.NextDouble() * (maxLifetime - minLifetime);
         Point position = new Point(rng.NextDouble() * (sceneSize.Width - size), rng.NextDouble() * (sceneSize.Height - size));
-        objects.Add(new CObject(position, size, lifetime));
+        objects.Add(new CPointGiver(position, size, lifetime));
     }
 
-    public void destroyObject(CObject obj)
+    public void destroyObject(CCollectable obj)
     {
         objects.Remove(obj);
     }
@@ -123,14 +126,18 @@ public class CController
         if (!running) return false;
         for (int i = objects.Count - 1; i >= 0; i--)
         {
-            if (objects[i].isMouseOnObject(mousePosition))
+            if (objects[i].onClick(player, this, mousePosition) == true)
             {
-                points += objects[i].getPointsValue();
                 destroyObject(objects[i]);
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void pointsIncrease(double amount)
+    {
+        points += amount;
     }
 }

@@ -4,15 +4,14 @@ using System.Windows.Shapes;
 
 namespace ClickerMechanics;
 
-public class CObject
+public abstract class CCollectable
 {
     private Point position;
-    private Size size;
+    protected Size size;
     private double lifetime;
-    private double pointsValue;
-    private Ellipse sprite;
+    protected Ellipse sprite;
 
-    public CObject(Point position, double size, double lifetime)
+    public CCollectable(Point position, double size, double lifetime)
     {
         this.position = position;
         this.size = new Size(size, size);
@@ -26,17 +25,11 @@ public class CObject
         sprite.Width = this.size.Width;
         sprite.Height = this.size.Height;
         sprite.RenderTransform = new TranslateTransform(position.X, position.Y);
-        pointsValue = ((1 / this.size.Width) / lifetime) * 1000;
     }
 
     public Ellipse getSprite()
     {
         return sprite;
-    }
-
-    public double getPointsValue()
-    {
-        return pointsValue;
     }
 
     // Проверяет попадание в круг, а не только в его прямоугольник.
@@ -54,6 +47,11 @@ public class CObject
         return lifetime <= 0;
     }
 
+    public void increaseLifetime(double modifier)
+    {
+        lifetime *= modifier;
+    }
+
     // Оставляет круг внутри сцены при изменении размера окна.
     public void fitToScene(Size sceneSize)
     {
@@ -61,4 +59,6 @@ public class CObject
         position.Y = Math.Clamp(position.Y, 0, Math.Max(0, sceneSize.Height - size.Height));
         sprite.RenderTransform = new TranslateTransform(position.X, position.Y);
     }
+
+    public abstract bool onClick(CPlayer player, CController controller, Point mousePosition);
 }

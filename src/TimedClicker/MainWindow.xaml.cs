@@ -72,7 +72,7 @@ public partial class MainWindow : Window
     {
         SceneCanvas.Children.Clear();
         if (controller is null) return;
-        foreach (CObject obj in controller.getObjects())
+        foreach (CCollectable obj in controller.getObjects())
         {
             SceneCanvas.Children.Add(obj.getSprite());
         }
