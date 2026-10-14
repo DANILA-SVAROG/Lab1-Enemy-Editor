@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\EnemyEditor\Models\BigNumber.cs" Link="Models\BigNumber.cs" />
+  </ItemGroup>
+
 </Project>
