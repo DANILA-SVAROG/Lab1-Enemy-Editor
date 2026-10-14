@@ -171,4 +171,52 @@ public class BigNumberTest
         var expected = new ArgumentException("Нужно указать неотрицательное целое число.", "value");
         Assert.That(exception!.Message, Is.EqualTo(expected.Message));
     }
+
+    [TestCase("999999999", "1")]
+    [TestCase("0", "123456789")]
+    public void AddTest_DoesNotChangeNumbers(string a, string b)
+    {
+        var n1 = new BigNumber(a);
+        var n2 = new BigNumber(b);
+        var result = n1 + n2;
+        Assert.AreEqual(a, n1.ToString());
+        Assert.AreEqual(b, n2.ToString());
+        Assert.AreNotSame(n1, result);
+        Assert.AreNotSame(n2, result);
+    }
+
+    [TestCase("1000000000", "1")]
+    [TestCase("123456789", "123456789")]
+    public void SubTest_DoesNotChangeNumbers(string a, string b)
+    {
+        var n1 = new BigNumber(a);
+        var n2 = new BigNumber(b);
+        var result = n1 - n2;
+        Assert.AreEqual(a, n1.ToString());
+        Assert.AreEqual(b, n2.ToString());
+        Assert.AreNotSame(n1, result);
+        Assert.AreNotSame(n2, result);
+    }
+
+    [TestCase("999999999", 2)]
+    [TestCase("12345", 1)]
+    [TestCase("12345", 0.5)]
+    public void MulTest_DoesNotChangeNumber(string a, double b)
+    {
+        var n1 = new BigNumber(a);
+        var result = n1 * b;
+        Assert.AreEqual(a, n1.ToString());
+        Assert.AreNotSame(n1, result);
+    }
+
+    [TestCase("10014217", 3)]
+    [TestCase("12345", 1)]
+    [TestCase("12345", 0.5)]
+    public void DivTest_DoesNotChangeNumber(string a, double b)
+    {
+        var n1 = new BigNumber(a);
+        var result = n1 / b;
+        Assert.AreEqual(a, n1.ToString());
+        Assert.AreNotSame(n1, result);
+    }
 }
