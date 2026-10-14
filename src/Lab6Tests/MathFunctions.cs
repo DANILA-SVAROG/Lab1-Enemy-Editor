@@ -24,4 +24,29 @@ public class MathFunctions
     {
         return n % 2 == 0;
     }
+
+    // Находит наибольшее число в непустом массиве.
+    public int max(int[]? numbers)
+    {
+        if (numbers is null)
+        {
+            throw new ArgumentException("Массив не должен быть null");
+        }
+
+        if (numbers.Length == 0)
+        {
+            throw new ArgumentException("Массив не должен быть пустым");
+        }
+
+        int maximum = numbers[0];
+        for (int i = 1; i < numbers.Length; i++)
+        {
+            if (numbers[i] > maximum)
+            {
+                maximum = numbers[i];
+            }
+        }
+
+        return maximum;
+    }
 }
