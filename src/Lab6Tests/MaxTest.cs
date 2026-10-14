@@ -22,4 +22,38 @@ public class MaxTest
         int result = math.max(numbers);
         Assert.AreEqual(expected, result);
     }
+
+    [TestCase(new int[] { })]
+    public void MaxTest_ThrowsOnEmptyArray(int[] numbers)
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.max(numbers));
+        Assert.That(exception!.Message, Is.EqualTo("Массив не должен быть пустым"));
+    }
+
+    [Test]
+    public void MaxTest_ThrowsOnNullArray()
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.max(null));
+        Assert.That(exception!.Message, Is.EqualTo("Массив не должен быть null"));
+    }
+
+    [TestCase(new int[] { 7 })]
+    [TestCase(new int[] { -5, -1 })]
+    public void MaxTest_DoesNotThrowOnCorrectArray(int[] numbers)
+    {
+        var math = new MathFunctions();
+        Assert.DoesNotThrow(() => math.max(numbers));
+    }
+
+    [TestCase(new int[] { 2, 5, 3 })]
+    [TestCase(new int[] { -7 })]
+    public void MaxTest_DoesNotChangeArray(int[] numbers)
+    {
+        var math = new MathFunctions();
+        int[] original = (int[])numbers.Clone();
+        math.max(numbers);
+        CollectionAssert.AreEqual(original, numbers);
+    }
 }
