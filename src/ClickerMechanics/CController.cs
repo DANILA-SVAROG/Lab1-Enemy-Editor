@@ -18,12 +18,30 @@ public class CController
     private readonly bool timedRound;
     private bool running;
     private readonly CPlayer player;
+    private readonly bool bonusesEnabled;
+    private double lifetimeModifier = 1;
 
     public CController(double spawnRate, ulong startTime, Size sceneSize)
+        : this(spawnRate, startTime, sceneSize, new CPlayer(0), false)
     {
+    }
+
+    public CController(double spawnRate, ulong startTime, Size sceneSize, bool bonusesEnabled)
+        : this(spawnRate, startTime, sceneSize, new CPlayer(bonusesEnabled ? 0.45 : 0), bonusesEnabled)
+    {
+    }
+
+    public CController(double spawnRate, ulong startTime, Size sceneSize, CPlayer player, bool bonusesEnabled)
+    {
+        if (!double.IsFinite(spawnRate) || spawnRate <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(spawnRate));
+        }
+
         rng = new Random();
         objects = new List<CCollectable>();
-        player = new CPlayer(0.45);
+        this.player = player;
+        this.bonusesEnabled = bonusesEnabled;
         this.spawnRate = spawnRate;
         this.sceneSize = sceneSize;
         timeLeft = startTime;
@@ -39,6 +57,7 @@ public class CController
     public double getPoints() => points;
     public double getTimeLeft() => timeLeft;
     public double getSpawnRate() => spawnRate;
+    public double getLifetimeModifier() => lifetimeModifier;
     public bool isRunning() => running;
 
     public void start()
@@ -69,9 +88,15 @@ public class CController
             return;
         }
 
-        double lifetime = minLifetime + rng.NextDouble() * (maxLifetime - minLifetime);
+        double lifetime = (minLifetime + rng.NextDouble() * (maxLifetime - minLifetime)) * lifetimeModifier;
         Point position = new Point(rng.NextDouble() * (sceneSize.Width - size), rng.NextDouble() * (sceneSize.Height - size));
-        objects.Add(new CPointGiver(position, size, lifetime));
+        objects.Add(createObject(position, size, lifetime));
+    }
+
+    // Обычный контроллер создаёт фиолетовые сферы с очками.
+    protected virtual CCollectable createObject(Point position, double size, double lifetime)
+    {
+        return new CPointGiver(position, size, lifetime);
     }
 
     public void destroyObject(CCollectable obj)
@@ -86,6 +111,8 @@ public class CController
         {
             return;
         }
+
+        player.update(delta);
 
         while (delta > 0 && running)
         {
@@ -123,11 +150,12 @@ public class CController
     // Сначала проверяет верхний круг, если круги перекрываются.
     public bool mouseClick(Point mousePosition)
     {
-        if (!running) return false;
+        if (!running || !player.canClick()) return false;
         for (int i = objects.Count - 1; i >= 0; i--)
         {
             if (objects[i].onClick(player, this, mousePosition) == true)
             {
+                player.tryClick();
                 destroyObject(objects[i]);
                 return true;
             }
@@ -139,5 +167,19 @@ public class CController
     public void pointsIncrease(double amount)
     {
         points += amount;
+    }
+
+    public void increaseLifetime(double modifier)
+    {
+        lifetimeModifier = Math.Min(3, lifetimeModifier * modifier);
+        foreach (CCollectable obj in objects)
+        {
+            obj.increaseLifetime(modifier);
+        }
+    }
+
+    public void increaseSpawnSpeed(double modifier)
+    {
+        spawnRate = Math.Max(0.15, spawnRate * modifier);
     }
 }
