@@ -23,4 +23,22 @@ public class BigNumberTest
         var result = n1 + n2;
         Assert.AreEqual(expected, result.ToString());
     }
+
+    // Проверяет заём из соседнего и более дальних блоков.
+    [TestCase("3712117", "1911900", "1800217")]
+    [TestCase("1000", "1", "999")]
+    [TestCase("1000000000", "1", "999999999")]
+    [TestCase("1000000000000000000000000000000", "1", "999999999999999999999999999999")]
+    [TestCase("123456789", "123456789", "0")]
+    [TestCase("123456789", "0", "123456789")]
+    [TestCase("0", "0", "0")]
+    [TestCase("1001000", "999", "1000001")]
+    [TestCase("0010", "0001", "9")]
+    public void SubTest(string a, string b, string expected)
+    {
+        var n1 = new BigNumber(a);
+        var n2 = new BigNumber(b);
+        var result = n1 - n2;
+        Assert.AreEqual(expected, result.ToString());
+    }
 }
