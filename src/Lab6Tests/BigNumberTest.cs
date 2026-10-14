@@ -41,4 +41,17 @@ public class BigNumberTest
         var result = n1 - n2;
         Assert.AreEqual(expected, result.ToString());
     }
+
+    [TestCase("1", "2")]
+    [TestCase("0", "1")]
+    [TestCase("999999999", "1000000000")]
+    public void SubTest_ThrowsOnNegativeResult(string a, string b)
+    {
+        var n1 = new BigNumber(a);
+        var n2 = new BigNumber(b);
+        var exception = Assert.Throws<InvalidOperationException>(() => { var result = n1 - n2; });
+        Assert.That(exception!.Message, Is.EqualTo("Результат вычитания не может быть отрицательным."));
+        Assert.AreEqual(a, n1.ToString());
+        Assert.AreEqual(b, n2.ToString());
+    }
 }
