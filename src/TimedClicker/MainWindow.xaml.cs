@@ -60,7 +60,9 @@ public partial class MainWindow : Window
             timer.Stop();
             StartButton.IsEnabled = true;
             BonusesCheckBox.IsEnabled = true;
-            StatusTextBlock.Text = $"Время вышло! Набрано очков: {controller.getPoints():F1}.";
+            StatusTextBlock.Text = controller.getTimeLeft() <= 0
+                ? $"Время вышло! Набрано очков: {controller.getPoints():F1}."
+                : "Раунд остановлен.";
         }
     }
 
