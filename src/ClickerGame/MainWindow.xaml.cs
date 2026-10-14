@@ -1,6 +1,7 @@
 using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using EnemyEditor.Models;
 using Microsoft.Win32;
 
@@ -12,14 +13,31 @@ public partial class MainWindow : Window
     private readonly Player player = new Player();
     private Enemy? currentEnemy;
     private int defeatedCount;
+    private readonly DispatcherTimer timer = new DispatcherTimer();
+    private readonly System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
 
     public MainWindow()
     {
         InitializeComponent();
         UpdatePlayerInfo();
+        timer.Interval = new TimeSpan(0, 0, 0, 0, 100);
+        timer.Tick += Timer_Tick;
+        Closed += (sender, e) => timer.Stop();
+        clock.Start();
+        timer.Start();
         if (File.Exists(EnemyFileLocation.FilePath))
         {
             LoadTemplates(EnemyFileLocation.FilePath);
+        }
+    }
+
+    private void Timer_Tick(object? sender, EventArgs e)
+    {
+        player.update(clock.Elapsed.TotalSeconds);
+        clock.Restart();
+        if (currentEnemy is not null)
+        {
+            EnemyButton.IsEnabled = player.canClick() && !currentEnemy.IsDead;
         }
     }
 
@@ -90,7 +108,7 @@ public partial class MainWindow : Window
 
     private void EnemyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (currentEnemy is null)
+        if (currentEnemy is null || !player.tryClick())
         {
             return;
         }
@@ -107,6 +125,8 @@ public partial class MainWindow : Window
         {
             UpdateEnemyInfo();
         }
+
+        EnemyButton.IsEnabled = player.canClick();
     }
 
     private void UpgradeButton_Click(object sender, RoutedEventArgs e)

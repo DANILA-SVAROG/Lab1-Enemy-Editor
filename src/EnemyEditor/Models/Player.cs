@@ -1,6 +1,8 @@
+using ClickerMechanics;
+
 namespace EnemyEditor.Models;
 
-public class Player
+public class Player : CPlayer
 {
     public int Lvl { get; private set; }
     public BigNumber Gold { get; private set; }
@@ -9,7 +11,7 @@ public class Player
     public BigNumber UpgradeCost { get; private set; }
     public double UpgradeModifier { get; private set; }
 
-    public Player()
+    public Player() : base(0.65)
     {
         Lvl = 1;
         Gold = new BigNumber("0");

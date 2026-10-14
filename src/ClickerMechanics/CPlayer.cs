@@ -12,7 +12,7 @@ public class CPlayer
     }
 
     public bool canClick() => countdownTimer.getTime() <= 0;
-    public double getTimeBeforeClick() => timeBeforeClick;
+    public virtual double getTimeBeforeClick() => timeBeforeClick;
     public double getRemainingCooldown() => countdownTimer.getTime();
 
     // Запускает перезарядку только после успешного клика.
@@ -23,7 +23,7 @@ public class CPlayer
         return true;
     }
 
-    public void update(double delta)
+    public virtual void update(double delta)
     {
         countdownTimer.update(delta);
     }
