@@ -92,4 +92,54 @@ public class BigNumberTest
         var result = n1 / b;
         Assert.AreEqual(expected, result.ToString());
     }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    [TestCase(double.NaN)]
+    [TestCase(double.PositiveInfinity)]
+    [TestCase(double.NegativeInfinity)]
+    public void MulTest_ThrowsOnIncorrectMultiplier(double b)
+    {
+        var n1 = new BigNumber("12345");
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => { var result = n1 * b; });
+        var expected = new ArgumentOutOfRangeException("value", "Множитель должен быть положительным.");
+        Assert.That(exception!.Message, Is.EqualTo(expected.Message));
+        Assert.AreEqual("12345", n1.ToString());
+    }
+
+    [TestCase(0)]
+    [TestCase(-1)]
+    [TestCase(double.NaN)]
+    [TestCase(double.PositiveInfinity)]
+    [TestCase(double.NegativeInfinity)]
+    public void DivTest_ThrowsOnIncorrectDivisor(double b)
+    {
+        var n1 = new BigNumber("12345");
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => { var result = n1 / b; });
+        var expected = new ArgumentOutOfRangeException("value", "Множитель должен быть положительным.");
+        Assert.That(exception!.Message, Is.EqualTo(expected.Message));
+        Assert.AreEqual("12345", n1.ToString());
+    }
+
+    [TestCase(double.MaxValue, "Множитель слишком велик.")]
+    [TestCase(1e20, "Множитель содержит слишком много цифр.")]
+    [TestCase(0.0000000001, "Множитель содержит слишком много цифр.")]
+    public void MulTest_ThrowsOnUnsupportedMultiplier(double b, string message)
+    {
+        var n1 = new BigNumber("12345");
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => { var result = n1 * b; });
+        var expected = new ArgumentOutOfRangeException("value", message);
+        Assert.That(exception!.Message, Is.EqualTo(expected.Message));
+    }
+
+    [TestCase(double.MaxValue, "Множитель слишком велик.")]
+    [TestCase(1e20, "Множитель содержит слишком много цифр.")]
+    [TestCase(0.0000000001, "Множитель содержит слишком много цифр.")]
+    public void DivTest_ThrowsOnUnsupportedDivisor(double b, string message)
+    {
+        var n1 = new BigNumber("12345");
+        var exception = Assert.Throws<ArgumentOutOfRangeException>(() => { var result = n1 / b; });
+        var expected = new ArgumentOutOfRangeException("value", message);
+        Assert.That(exception!.Message, Is.EqualTo(expected.Message));
+    }
 }
