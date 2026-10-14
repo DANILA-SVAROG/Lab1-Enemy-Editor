@@ -4,6 +4,7 @@ namespace EnemyEditor.Models;
 
 public class Player : CPlayer
 {
+    private readonly List<CBonusEffect> bonuses = new List<CBonusEffect>();
     public int Lvl { get; private set; }
     public BigNumber Gold { get; private set; }
     public BigNumber Damage { get; private set; }
@@ -11,6 +12,7 @@ public class Player : CPlayer
     public BigNumber UpgradeCost { get; private set; }
     public double UpgradeModifier { get; private set; }
     public BigNumber CooldownUpgradeCost { get; private set; }
+    public bool CanUpgradeCooldown => base.getTimeBeforeClick() > 0.080001;
 
     public Player() : base(0.65)
     {
@@ -44,13 +46,50 @@ public class Player : CPlayer
 
     public BigNumber DealDamage()
     {
-        return Damage;
+        BigNumber result = Damage;
+        foreach (CBonusEffect bonus in bonuses)
+        {
+            result = result * bonus.getDamageModifier();
+        }
+
+        return result;
+    }
+
+    public void AddBonus(CBonusEffect bonus)
+    {
+        bonuses.Add(bonus);
+    }
+
+    public IReadOnlyList<CBonusEffect> GetBonuses() => bonuses.AsReadOnly();
+
+    public override double getTimeBeforeClick()
+    {
+        double result = base.getTimeBeforeClick();
+        foreach (CBonusEffect bonus in bonuses)
+        {
+            result *= bonus.getCooldownModifier();
+        }
+
+        return Math.Max(0.08, result);
+    }
+
+    // У каждого временного эффекта свой срок окончания.
+    public override void update(double delta)
+    {
+        base.update(delta);
+        for (int i = bonuses.Count - 1; i >= 0; i--)
+        {
+            if (bonuses[i].update(delta))
+            {
+                bonuses.RemoveAt(i);
+            }
+        }
     }
 
     // За золото уменьшает обычную перезарядку атаки.
     public bool TryUpgradeCooldown()
     {
-        if (base.getTimeBeforeClick() <= 0.080001 || !TrySpendGold(CooldownUpgradeCost))
+        if (!CanUpgradeCooldown || !TrySpendGold(CooldownUpgradeCost))
         {
             return false;
         }

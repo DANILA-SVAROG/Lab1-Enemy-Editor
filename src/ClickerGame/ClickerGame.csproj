@@ -15,6 +15,9 @@
     <Compile Include="..\EnemyEditor\Models\EnemyIcon.cs" Link="Models\EnemyIcon.cs" />
     <Compile Include="..\EnemyEditor\Models\Enemy.cs" Link="Models\Enemy.cs" />
     <Compile Include="..\EnemyEditor\Models\Player.cs" Link="Models\Player.cs" />
+    <Compile Include="..\EnemyEditor\Models\CBonusEffect.cs" Link="Models\CBonusEffect.cs" />
+    <Compile Include="..\EnemyEditor\Models\CDamageEffect.cs" Link="Models\CDamageEffect.cs" />
+    <Compile Include="..\EnemyEditor\Models\CSpeedEffect.cs" Link="Models\CSpeedEffect.cs" />
     <Compile Include="..\EnemyEditor\Models\EnemyTemplateStore.cs" Link="Models\EnemyTemplateStore.cs" />
     <Compile Include="..\EnemyEditor\Models\EnemyFileLocation.cs" Link="Models\EnemyFileLocation.cs" />
     <Content Include="..\EnemyEditor\Assets\Icons\icons\Monsters\*.png" Link="Assets\Icons\Monsters\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
