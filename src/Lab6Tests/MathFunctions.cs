@@ -49,4 +49,15 @@ public class MathFunctions
 
         return maximum;
     }
+
+    // Делитель должен быть положительным, как в методичке.
+    public int mod(int a, int b)
+    {
+        if (b <= 0)
+        {
+            throw new ArgumentException("Делитель должен быть положительным числом");
+        }
+
+        return a % b;
+    }
 }
