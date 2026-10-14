@@ -16,4 +16,34 @@ public class InchesTest
         double result = math.inchesToCentimeters(inches);
         Assert.AreEqual(expected, result, 0.000000001);
     }
+
+    [TestCase(-1)]
+    [TestCase(-0.5)]
+    [TestCase(double.NaN)]
+    [TestCase(double.PositiveInfinity)]
+    [TestCase(double.NegativeInfinity)]
+    public void InchesTest_ThrowsOnIncorrectValue(double inches)
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.inchesToCentimeters(inches));
+        Assert.That(exception!.Message,
+            Is.EqualTo("Количество дюймов должно быть конечным неотрицательным числом"));
+    }
+
+    [TestCase(double.MaxValue)]
+    public void InchesTest_ThrowsOnTooLargeResult(double inches)
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.inchesToCentimeters(inches));
+        Assert.That(exception!.Message, Is.EqualTo("Результат перевода в сантиметры слишком велик"));
+    }
+
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(0.25)]
+    public void InchesTest_DoesNotThrowOnCorrectValue(double inches)
+    {
+        var math = new MathFunctions();
+        Assert.DoesNotThrow(() => math.inchesToCentimeters(inches));
+    }
 }
