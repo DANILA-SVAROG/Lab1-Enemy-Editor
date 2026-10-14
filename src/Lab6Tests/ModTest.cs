@@ -22,4 +22,31 @@ public class ModTest
         var math = new MathFunctions();
         Assert.AreEqual(expected, math.mod(a, b));
     }
+
+    [Test]
+    public void ModTest_ThrowsOnZeroDivisor()
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.mod(10, 0));
+        Assert.That(exception!.Message, Is.EqualTo("Делитель должен быть положительным числом"));
+    }
+
+    [TestCase(-3)]
+    [TestCase(-1)]
+    [TestCase(int.MinValue)]
+    public void ModTest_ThrowsOnNegativeDivisor(int b)
+    {
+        var math = new MathFunctions();
+        var exception = Assert.Throws<ArgumentException>(() => math.mod(10, b));
+        Assert.That(exception!.Message, Is.EqualTo("Делитель должен быть положительным числом"));
+    }
+
+    [TestCase(10, 3)]
+    [TestCase(0, 1)]
+    [TestCase(-10, 3)]
+    public void ModTest_DoesNotThrowOnPositiveDivisor(int a, int b)
+    {
+        var math = new MathFunctions();
+        Assert.DoesNotThrow(() => math.mod(a, b));
+    }
 }
