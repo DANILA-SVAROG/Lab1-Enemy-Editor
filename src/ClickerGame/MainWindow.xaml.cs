@@ -2,6 +2,9 @@ using System.IO;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Input;
+using ClickerGame.Models;
+using ClickerMechanics;
 using EnemyEditor.Models;
 using Microsoft.Win32;
 
@@ -15,6 +18,7 @@ public partial class MainWindow : Window
     private int defeatedCount;
     private readonly DispatcherTimer timer = new DispatcherTimer();
     private readonly System.Diagnostics.Stopwatch clock = new System.Diagnostics.Stopwatch();
+    private CGameController? controller;
 
     public MainWindow()
     {
@@ -33,8 +37,17 @@ public partial class MainWindow : Window
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
-        player.update(clock.Elapsed.TotalSeconds);
+        double delta = clock.Elapsed.TotalSeconds;
         clock.Restart();
+        if (controller is not null)
+        {
+            controller.update(delta);
+            DrawBonuses();
+        }
+        else
+        {
+            player.update(delta);
+        }
         if (currentEnemy is not null)
         {
             EnemyButton.IsEnabled = player.canClick() && !currentEnemy.IsDead;
@@ -63,6 +76,9 @@ public partial class MainWindow : Window
         try
         {
             templates.LoadFromJson(path);
+            controller?.stop();
+            controller = new CGameController(player, new Size(EnemyScene.ActualWidth, EnemyScene.ActualHeight));
+            controller.start();
             FilePathTextBlock.Text = path;
             SpawnNextEnemy();
             StatusTextBlock.Text = $"Загружено шаблонов: {templates.Count}. Нажмите на противника.";
@@ -103,12 +119,14 @@ public partial class MainWindow : Window
     {
         LevelTextBlock.Text = $"Уровень: {player.Lvl}";
         GoldTextBlock.Text = $"Золото: {player.Gold}";
-        DamageTextBlock.Text = $"Урон: {player.Damage}";
+        DamageTextBlock.Text = $"Урон: {player.DealDamage()}";
         CostTextBlock.Text = $"Цена улучшения: {player.UpgradeCost}";
         UpgradeButton.IsEnabled = player.Gold >= player.UpgradeCost;
         CooldownTextBlock.Text = $"Перезарядка: {player.getTimeBeforeClick():F2} с; осталось: {player.getRemainingCooldown():F2} с";
         CooldownCostTextBlock.Text = $"Цена ускорения: {player.CooldownUpgradeCost}";
-        CooldownUpgradeButton.IsEnabled = player.getTimeBeforeClick() > 0.080001 && player.Gold >= player.CooldownUpgradeCost;
+        CooldownUpgradeButton.IsEnabled = player.CanUpgradeCooldown && player.Gold >= player.CooldownUpgradeCost;
+        BonusesTextBlock.Text = player.GetBonuses().Count == 0 ? "Активных бонусов нет"
+            : string.Join("\n", player.GetBonuses().Select(bonus => $"{bonus.getDescription()}: {bonus.getTime():F1} с"));
     }
 
     private void EnemyButton_Click(object sender, RoutedEventArgs e)
@@ -149,6 +167,34 @@ public partial class MainWindow : Window
         {
             StatusTextBlock.Text = "Перезарядка атаки уменьшена.";
             UpdatePlayerInfo();
+        }
+    }
+
+    private void EnemyScene_SizeChanged(object sender, SizeChangedEventArgs e)
+    {
+        controller?.setSceneSize(e.NewSize);
+    }
+
+    private void BonusCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (controller?.mouseClick(e.GetPosition(BonusCanvas)) == true)
+        {
+            StatusTextBlock.Text = "Бонус получен.";
+            UpdatePlayerInfo();
+            DrawBonuses();
+            EnemyButton.IsEnabled = player.canClick();
+        }
+
+        e.Handled = true;
+    }
+
+    private void DrawBonuses()
+    {
+        BonusCanvas.Children.Clear();
+        if (controller is null) return;
+        foreach (CCollectable obj in controller.getObjects())
+        {
+            BonusCanvas.Children.Add(obj.getSprite());
         }
     }
 }

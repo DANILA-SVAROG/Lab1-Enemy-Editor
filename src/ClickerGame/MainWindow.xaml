@@ -1,7 +1,7 @@
 <Window x:Class="ClickerGame.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Игра-кликер" Height="510" Width="750" MinHeight="460" MinWidth="680"
+        Title="Игра-кликер" Height="650" Width="1080" MinHeight="620" MinWidth="960"
         Background="#F3F5F9">
     <Grid Margin="20">
         <Grid.RowDefinitions>
@@ -21,34 +21,36 @@
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="230"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="245"/>
             </Grid.ColumnDefinitions>
 
             <GroupBox Grid.Column="0" Header="Противник" Margin="0,0,10,0">
                 <StackPanel Margin="12">
-                    <TextBlock Name="EnemyNameTextBlock" Text="Имя: —" FontSize="17" Margin="0,6"/>
-                    <TextBlock Name="EnemyHealthTextBlock" Text="Здоровье: —" FontSize="15" Margin="0,6"/>
-                    <TextBlock Name="EnemyRewardTextBlock" Text="Награда: —" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="EnemyNameTextBlock" Text="Имя: —" FontSize="17" Margin="0,6" TextWrapping="Wrap"/>
+                    <TextBlock Name="EnemyHealthTextBlock" Text="Здоровье: —" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
+                    <TextBlock Name="EnemyRewardTextBlock" Text="Награда: —" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
                     <TextBlock Name="DefeatedTextBlock" Text="Побеждено: 0" FontSize="15" Margin="0,6"/>
                 </StackPanel>
             </GroupBox>
 
             <GroupBox Grid.Column="1" Header="Нажмите на противника" Margin="0,0,10,0">
-                <Grid>
+                <Grid Name="EnemyScene" Background="White" SizeChanged="EnemyScene_SizeChanged">
                     <Button Name="EnemyButton" Click="EnemyButton_Click" IsEnabled="False" Margin="12"
                             Background="White" BorderBrush="#B8C2CF" Cursor="Hand">
                         <Image Name="EnemyImage" Width="150" Height="150" Stretch="Uniform"/>
                     </Button>
+                    <Canvas Name="BonusCanvas" Background="{x:Null}" ClipToBounds="True"
+                            MouseLeftButtonDown="BonusCanvas_MouseLeftButtonDown"/>
                 </Grid>
             </GroupBox>
 
             <GroupBox Grid.Column="2" Header="Игрок">
                 <StackPanel Margin="12">
                     <TextBlock Name="LevelTextBlock" Text="Уровень: 1" FontSize="17" Margin="0,6"/>
-                    <TextBlock Name="GoldTextBlock" Text="Золото: 0" FontSize="15" Margin="0,6"/>
-                    <TextBlock Name="DamageTextBlock" Text="Урон: 5" FontSize="15" Margin="0,6"/>
+                    <TextBlock Name="GoldTextBlock" Text="Золото: 0" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
+                    <TextBlock Name="DamageTextBlock" Text="Урон: 5" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
                     <TextBlock Name="CostTextBlock" Text="Цена улучшения: 10" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
                     <Button Name="UpgradeButton" Content="Улучшить урон" Click="UpgradeButton_Click"
                             IsEnabled="False" Padding="10,7" Margin="0,14,0,0"/>
@@ -56,11 +58,19 @@
                     <TextBlock Name="CooldownCostTextBlock" Text="Цена ускорения: 15" TextWrapping="Wrap"/>
                     <Button Name="CooldownUpgradeButton" Content="Ускорить атаку" Click="CooldownUpgradeButton_Click"
                             IsEnabled="False" Padding="10,7" Margin="0,8,0,0"/>
+                    <TextBlock Name="BonusesTextBlock" Text="Активных бонусов нет" TextWrapping="Wrap" Margin="0,12,0,0"/>
                 </StackPanel>
             </GroupBox>
         </Grid>
 
-        <TextBlock Grid.Row="3" Name="StatusTextBlock" Text="Загрузите JSON из редактора противников."
-                   Foreground="#52647A" Margin="0,14,0,0" TextWrapping="Wrap"/>
+        <StackPanel Grid.Row="3" Margin="0,14,0,0">
+            <WrapPanel>
+                <TextBlock Text="● Урон ×2 на 10 с" Foreground="IndianRed" Margin="0,0,18,0"/>
+                <TextBlock Text="● Быстрые атаки на 8 с" Foreground="DodgerBlue" Margin="0,0,18,0"/>
+                <TextBlock Text="● Мгновенное золото" Foreground="DarkGoldenrod"/>
+            </WrapPanel>
+            <TextBlock Name="StatusTextBlock" Text="Загрузите JSON из редактора противников."
+                       Foreground="#52647A" Margin="0,8,0,0" TextWrapping="Wrap"/>
+        </StackPanel>
     </Grid>
 </Window>
