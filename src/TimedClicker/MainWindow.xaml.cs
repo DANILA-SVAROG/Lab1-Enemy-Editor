@@ -45,6 +45,13 @@ public partial class MainWindow : Window
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
+        UpdateRound();
+        DrawScene();
+    }
+
+    // Проверяет прошедшее время и при клике, чтобы не собирать круги после конца.
+    private void UpdateRound()
+    {
         if (controller is null) return;
         controller.update(clock.Elapsed.TotalSeconds);
         clock.Restart();
@@ -55,12 +62,11 @@ public partial class MainWindow : Window
             BonusesCheckBox.IsEnabled = true;
             StatusTextBlock.Text = $"Время вышло! Набрано очков: {controller.getPoints():F1}.";
         }
-
-        DrawScene();
     }
 
     private void SceneCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        UpdateRound();
         controller?.mouseClick(e.GetPosition(SceneCanvas));
         DrawScene();
     }

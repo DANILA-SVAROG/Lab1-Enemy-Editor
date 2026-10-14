@@ -82,6 +82,7 @@ public class CController
 
     public void spawnObject()
     {
+        if (!running) return;
         double size = minSpriteSize + rng.NextDouble() * (maxSpriteSize - minSpriteSize);
         if (sceneSize.Width < size || sceneSize.Height < size)
         {
@@ -115,7 +116,7 @@ public class CController
     // Обновляет круги до ближайшего появления или конца раунда.
     public void update(double delta)
     {
-        if (!running || delta <= 0)
+        if (!running || !double.IsFinite(delta) || delta <= 0)
         {
             return;
         }
@@ -179,10 +180,12 @@ public class CController
 
     public void increaseLifetime(double modifier)
     {
-        lifetimeModifier = Math.Min(3, lifetimeModifier * modifier);
+        double newModifier = Math.Min(3, lifetimeModifier * modifier);
+        double appliedModifier = newModifier / lifetimeModifier;
+        lifetimeModifier = newModifier;
         foreach (CCollectable obj in objects)
         {
-            obj.increaseLifetime(modifier);
+            obj.increaseLifetime(appliedModifier);
         }
     }
 
