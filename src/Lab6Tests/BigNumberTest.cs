@@ -72,4 +72,24 @@ public class BigNumberTest
         var result = n1 * b;
         Assert.AreEqual(expected, result.ToString());
     }
+
+    // Проверяет отбрасывание остатка после целочисленного деления.
+    [TestCase("10014217", 3, "3338072")]
+    [TestCase("10", 3, "3")]
+    [TestCase("7", 7, "1")]
+    [TestCase("2", 5, "0")]
+    [TestCase("0", 5, "0")]
+    [TestCase("123456789", 1, "123456789")]
+    [TestCase("1000000000", 1000, "1000000")]
+    [TestCase("1000000001", 1000, "1000000")]
+    [TestCase("999999999999999999999999999999", 3, "333333333333333333333333333333")]
+    [TestCase("7", 0.5, "14")]
+    [TestCase("7", 2.5, "2")]
+    [TestCase("2000", 0.001, "2000000")]
+    public void DivTest(string a, double b, string expected)
+    {
+        var n1 = new BigNumber(a);
+        var result = n1 / b;
+        Assert.AreEqual(expected, result.ToString());
+    }
 }
