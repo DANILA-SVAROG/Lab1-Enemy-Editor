@@ -37,6 +37,11 @@ public partial class MainWindow : Window
 
     private void Timer_Tick(object? sender, EventArgs e)
     {
+        UpdateGameTime();
+    }
+
+    private void UpdateGameTime()
+    {
         double delta = clock.Elapsed.TotalSeconds;
         clock.Restart();
         if (controller is not null)
@@ -98,7 +103,7 @@ public partial class MainWindow : Window
         EnemyIcon icon = new EnemyIcon { Name = template.IconName, ImagePath = iconPath };
         currentEnemy = new Enemy(template, defeatedCount + 1, icon);
         EnemyImage.Source = File.Exists(iconPath) ? new BitmapImage(new Uri(iconPath)) : null;
-        EnemyButton.IsEnabled = !currentEnemy.IsDead;
+        EnemyButton.IsEnabled = player.canClick() && !currentEnemy.IsDead;
         UpdateEnemyInfo();
     }
 
@@ -131,7 +136,8 @@ public partial class MainWindow : Window
 
     private void EnemyButton_Click(object sender, RoutedEventArgs e)
     {
-        if (currentEnemy is null || !player.tryClick())
+        UpdateGameTime();
+        if (currentEnemy is null || currentEnemy.IsDead || !player.tryClick())
         {
             return;
         }
@@ -177,6 +183,7 @@ public partial class MainWindow : Window
 
     private void BonusCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
+        UpdateGameTime();
         if (controller?.mouseClick(e.GetPosition(BonusCanvas)) == true)
         {
             StatusTextBlock.Text = "Бонус получен.";
