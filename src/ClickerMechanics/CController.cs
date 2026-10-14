@@ -96,6 +96,14 @@ public class CController
     // Обычный контроллер создаёт фиолетовые сферы с очками.
     protected virtual CCollectable createObject(Point position, double size, double lifetime)
     {
+        if (bonusesEnabled)
+        {
+            int type = rng.Next(10);
+            if (type == 0) return new CClickSpeedUp(position, size, lifetime, 0.85);
+            if (type == 1) return new CLifetimeChanger(position, size, lifetime, 1.2);
+            if (type == 2) return new CSpawnRateChanger(position, size, lifetime, 0.85);
+        }
+
         return new CPointGiver(position, size, lifetime);
     }
 
