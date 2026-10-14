@@ -23,11 +23,12 @@ public partial class MainWindow : Window
 
     private void StartButton_Click(object sender, RoutedEventArgs e)
     {
-        controller = new CController(0.8, 30, new Size(SceneCanvas.ActualWidth, SceneCanvas.ActualHeight));
+        controller = new CController(0.8, 30, new Size(SceneCanvas.ActualWidth, SceneCanvas.ActualHeight), BonusesCheckBox.IsChecked == true);
         controller.start();
         clock.Restart();
         timer.Start();
         StartButton.IsEnabled = false;
+        BonusesCheckBox.IsEnabled = false;
         StatusTextBlock.Text = "Нажимайте на круги, чтобы набрать очки.";
         DrawScene();
     }
@@ -37,6 +38,7 @@ public partial class MainWindow : Window
         controller?.stop();
         timer.Stop();
         StartButton.IsEnabled = true;
+        BonusesCheckBox.IsEnabled = true;
         StatusTextBlock.Text = "Раунд остановлен.";
         DrawScene();
     }
@@ -50,6 +52,7 @@ public partial class MainWindow : Window
         {
             timer.Stop();
             StartButton.IsEnabled = true;
+            BonusesCheckBox.IsEnabled = true;
             StatusTextBlock.Text = $"Время вышло! Набрано очков: {controller.getPoints():F1}.";
         }
 
@@ -79,5 +82,7 @@ public partial class MainWindow : Window
 
         TimeTextBlock.Text = $"Время: {controller.getTimeLeft():F1} с";
         PointsTextBlock.Text = $"Очки: {controller.getPoints():F1}";
+        CooldownTextBlock.Text = $"Перезарядка: {controller.getPlayer().getTimeBeforeClick():F2} с; осталось: {controller.getPlayer().getRemainingCooldown():F2} с";
+        SettingsTextBlock.Text = $"Появление: {controller.getSpawnRate():F2} с; время жизни: ×{controller.getLifetimeModifier():F2}";
     }
 }

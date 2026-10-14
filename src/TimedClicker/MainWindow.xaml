@@ -21,7 +21,17 @@
             <Canvas Name="SceneCanvas" Background="Transparent" ClipToBounds="True"
                     MouseLeftButtonDown="SceneCanvas_MouseLeftButtonDown" SizeChanged="SceneCanvas_SizeChanged"/>
         </Border>
-        <TextBlock Grid.Row="3" Name="StatusTextBlock" Text="Нажимайте на появляющиеся круги. Раунд длится 30 секунд."
-                   Margin="0,12,0,0" TextWrapping="Wrap"/>
+        <StackPanel Grid.Row="3" Margin="0,12,0,0">
+            <CheckBox Name="BonusesCheckBox" Content="Бонусные сферы и перезарядка (задание 2)" IsChecked="True"/>
+            <TextBlock Name="CooldownTextBlock" Text="Перезарядка: 0,45 с" Margin="0,6"/>
+            <TextBlock Name="SettingsTextBlock" Text="Появление: 0,80 с; время жизни: ×1"/>
+            <WrapPanel Margin="0,6">
+                <TextBlock Text="● Очки" Foreground="BlueViolet" Margin="0,0,12,0"/>
+                <TextBlock Text="● Быстрый клик" Foreground="DodgerBlue" Margin="0,0,12,0"/>
+                <TextBlock Text="● Дольше живут" Foreground="Green" Margin="0,0,12,0"/>
+                <TextBlock Text="● Чаще появляются" Foreground="DarkOrange"/>
+            </WrapPanel>
+            <TextBlock Name="StatusTextBlock" Text="Нажимайте на появляющиеся круги. Раунд длится 30 секунд." TextWrapping="Wrap"/>
+        </StackPanel>
     </Grid>
 </Window>
