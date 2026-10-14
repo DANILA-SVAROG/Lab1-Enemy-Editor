@@ -18,4 +18,10 @@ public class MathFunctions
 
         return centimeters;
     }
+
+    // Проверяет чётность целого числа.
+    public bool isEven(int n)
+    {
+        return n % 2 == 0;
+    }
 }
