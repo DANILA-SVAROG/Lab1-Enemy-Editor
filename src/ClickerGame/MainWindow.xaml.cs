@@ -39,6 +39,8 @@ public partial class MainWindow : Window
         {
             EnemyButton.IsEnabled = player.canClick() && !currentEnemy.IsDead;
         }
+
+        UpdatePlayerInfo();
     }
 
     private void LoadButton_Click(object sender, RoutedEventArgs e)
@@ -104,6 +106,9 @@ public partial class MainWindow : Window
         DamageTextBlock.Text = $"Урон: {player.Damage}";
         CostTextBlock.Text = $"Цена улучшения: {player.UpgradeCost}";
         UpgradeButton.IsEnabled = player.Gold >= player.UpgradeCost;
+        CooldownTextBlock.Text = $"Перезарядка: {player.getTimeBeforeClick():F2} с; осталось: {player.getRemainingCooldown():F2} с";
+        CooldownCostTextBlock.Text = $"Цена ускорения: {player.CooldownUpgradeCost}";
+        CooldownUpgradeButton.IsEnabled = player.getTimeBeforeClick() > 0.080001 && player.Gold >= player.CooldownUpgradeCost;
     }
 
     private void EnemyButton_Click(object sender, RoutedEventArgs e)
@@ -134,6 +139,15 @@ public partial class MainWindow : Window
         if (player.TryUpgrade())
         {
             StatusTextBlock.Text = $"Урон улучшен до {player.Damage}.";
+            UpdatePlayerInfo();
+        }
+    }
+
+    private void CooldownUpgradeButton_Click(object sender, RoutedEventArgs e)
+    {
+        if (player.TryUpgradeCooldown())
+        {
+            StatusTextBlock.Text = "Перезарядка атаки уменьшена.";
             UpdatePlayerInfo();
         }
     }

@@ -10,6 +10,7 @@ public class Player : CPlayer
     public double DamageModifier { get; private set; }
     public BigNumber UpgradeCost { get; private set; }
     public double UpgradeModifier { get; private set; }
+    public BigNumber CooldownUpgradeCost { get; private set; }
 
     public Player() : base(0.65)
     {
@@ -19,6 +20,7 @@ public class Player : CPlayer
         DamageModifier = 1.5;
         UpgradeCost = new BigNumber("10");
         UpgradeModifier = 1.2;
+        CooldownUpgradeCost = new BigNumber("15");
     }
 
     // Добавляет награду после победы.
@@ -43,6 +45,19 @@ public class Player : CPlayer
     public BigNumber DealDamage()
     {
         return Damage;
+    }
+
+    // За золото уменьшает обычную перезарядку атаки.
+    public bool TryUpgradeCooldown()
+    {
+        if (base.getTimeBeforeClick() <= 0.080001 || !TrySpendGold(CooldownUpgradeCost))
+        {
+            return false;
+        }
+
+        increaseSpeed(0.85);
+        CooldownUpgradeCost = CooldownUpgradeCost * 1.5;
+        return true;
     }
 
     private bool TrySpendGold(BigNumber amount)

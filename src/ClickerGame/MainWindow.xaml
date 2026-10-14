@@ -52,6 +52,10 @@
                     <TextBlock Name="CostTextBlock" Text="Цена улучшения: 10" FontSize="15" Margin="0,6" TextWrapping="Wrap"/>
                     <Button Name="UpgradeButton" Content="Улучшить урон" Click="UpgradeButton_Click"
                             IsEnabled="False" Padding="10,7" Margin="0,14,0,0"/>
+                    <TextBlock Name="CooldownTextBlock" Text="Перезарядка: 0,65 с" Margin="0,14,0,6" TextWrapping="Wrap"/>
+                    <TextBlock Name="CooldownCostTextBlock" Text="Цена ускорения: 15" TextWrapping="Wrap"/>
+                    <Button Name="CooldownUpgradeButton" Content="Ускорить атаку" Click="CooldownUpgradeButton_Click"
+                            IsEnabled="False" Padding="10,7" Margin="0,8,0,0"/>
                 </StackPanel>
             </GroupBox>
         </Grid>
