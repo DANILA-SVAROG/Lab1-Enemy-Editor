@@ -142,4 +142,33 @@ public class BigNumberTest
         var expected = new ArgumentOutOfRangeException("value", message);
         Assert.That(exception!.Message, Is.EqualTo(expected.Message));
     }
+
+    [TestCase("0", "0")]
+    [TestCase("0000", "0")]
+    [TestCase("00123", "123")]
+    [TestCase("1000", "1000")]
+    [TestCase("1000001", "1000001")]
+    [TestCase("1000000001", "1000000001")]
+    [TestCase("1000000000000000000000000000000", "1000000000000000000000000000000")]
+    public void ToStringTest(string value, string expected)
+    {
+        var number = new BigNumber(value);
+        Assert.AreEqual(expected, number.ToString());
+    }
+
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase(" ")]
+    [TestCase("-1")]
+    [TestCase("+1")]
+    [TestCase("1.5")]
+    [TestCase("1,5")]
+    [TestCase("12a")]
+    [TestCase("1 000")]
+    public void ConstructorTest_ThrowsOnIncorrectValue(string? value)
+    {
+        var exception = Assert.Throws<ArgumentException>(() => new BigNumber(value!));
+        var expected = new ArgumentException("Нужно указать неотрицательное целое число.", "value");
+        Assert.That(exception!.Message, Is.EqualTo(expected.Message));
+    }
 }
