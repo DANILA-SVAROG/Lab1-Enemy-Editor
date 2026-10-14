@@ -54,4 +54,22 @@ public class BigNumberTest
         Assert.AreEqual(a, n1.ToString());
         Assert.AreEqual(b, n2.ToString());
     }
+
+    // Во второй лабораторной множитель имеет тип double.
+    [TestCase("7135654", 23, "164120042")]
+    [TestCase("999", 999, "998001")]
+    [TestCase("999999999", 1000, "999999999000")]
+    [TestCase("999999999999999999999999999999", 2, "1999999999999999999999999999998")]
+    [TestCase("123456789", 1, "123456789")]
+    [TestCase("0", 23, "0")]
+    [TestCase("7", 0.5, "3")]
+    [TestCase("12345", 0.1, "1234")]
+    [TestCase("2000", 0.001, "2")]
+    [TestCase("1", 0.5, "0")]
+    public void MulTest(string a, double b, string expected)
+    {
+        var n1 = new BigNumber(a);
+        var result = n1 * b;
+        Assert.AreEqual(expected, result.ToString());
+    }
 }
